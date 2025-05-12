@@ -35,12 +35,31 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!-- Category Spinner -->
+        <TextView
+            android:id="@+id/categoryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/modalTitle"
+            android:layout_marginTop="16dp"
+            android:text="Asset Category *"
+            android:textColor="@color/white" />
+            
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryLabel"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="@color/primary"
+            android:spinnerMode="dropdown"/>
+
         <!-- Asset Name Field -->
         <EditText
             android:id="@+id/inputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/modalTitle"
+            android:layout_below="@id/categorySpinner"
             android:layout_marginTop="16dp"
             android:hint="Asset name *"
             android:backgroundTint="@color/primary"
