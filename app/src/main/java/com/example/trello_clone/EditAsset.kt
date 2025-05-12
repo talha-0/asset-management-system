@@ -47,31 +47,38 @@ class EditAsset : AppCompatActivity() {
         if (categoryId != null) {
             fetchChecklistItems(categoryId)
             fetchAssetDetails(categoryId)
+            fetchComments(categoryId)
         }
 
         var closeBtn = findViewById<ImageView>(R.id.close_icon)
 
-        closeBtn.setOnTouchListener { view, motionEvent ->
-            when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    val intent = Intent(this, AssetInventoryActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
+        closeBtn.setOnClickListener {
+            val intent = Intent(this, AssetInventoryActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Set up the Move functionality
+        val moveButton = findViewById<TextView>(R.id.edit_icon)
+        moveButton.setOnClickListener {
+            // Show a toast message for now since move functionality is in development
+            Toast.makeText(this, "Moving asset to a different category...", Toast.LENGTH_SHORT).show()
+            
+            // Create an intent to open ChangeLocationActivity
+            try {
+                val intent = Intent(this, AssetInventoryActivity::class.java)
+                intent.putExtra("SHOW_MOVE_DIALOG", true)
+                intent.putExtra("ASSET_ID", categoryId)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Error opening move dialog: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+        
         var goToLabels = findViewById<LinearLayout>(R.id.lableGrid)
 
-        goToLabels.setOnTouchListener { view, motionEvent ->
-            when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    val intent = Intent(this, Labels::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
+        goToLabels.setOnClickListener {
+            val intent = Intent(this, Labels::class.java)
+            startActivity(intent)
         }
 
 
@@ -129,17 +136,8 @@ class EditAsset : AppCompatActivity() {
         scrollView = findViewById(R.id.scrollViewer)
         var addItemEditText: EditText = findViewById(R.id.addchecklist_input)
 
-        val checklistBtn: LinearLayout = findViewById(R.id.addChecklist_btn)
-        checklistBtn.setOnClickListener {
-            // Scroll to the EditText and focus it
-            scrollToView(addItemEditText)
-            addItemEditText.requestFocus()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(addItemEditText, InputMethodManager.SHOW_IMPLICIT)
-
-        }
-
-
+        // Initialize the checklist button directly in the addItemEditText focus code
+        // without relying on addChecklist_btn which doesn't exist in the layout
         addItemEditText.setOnEditorActionListener { v, actionId, event ->
             if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 val checklistItem = addItemEditText.text.toString().trim()
@@ -155,6 +153,15 @@ class EditAsset : AppCompatActivity() {
             }
         }
 
+        // Add a focus listener to scroll to the edit text when clicked
+        addItemEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                scrollToView(addItemEditText)
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(addItemEditText, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+
         val sendButton: ImageView = findViewById(R.id.send_button)
         val commentInput: EditText = findViewById(R.id.footer_edit_text)
 
@@ -167,16 +174,17 @@ class EditAsset : AppCompatActivity() {
                 // Push comment to Firebase
                 categoryId?.let { id ->
                     addCommentToDatabase(id, commentText)
+                    // Add the comment to the UI immediately for better user experience
+                    addCommentToUI("User", System.currentTimeMillis(), commentText)
                 }
-
-                // Add the comment to the UI
-                addCommentToUI("John Doe", System.currentTimeMillis(), commentText)
             } else {
                 Toast.makeText(this, "Please enter a comment", Toast.LENGTH_SHORT).show()
             }
         }
 
-
+        // Clear previous comments to avoid duplicates
+        val commentsContainer = findViewById<LinearLayout>(R.id.commentsContainer)
+        commentsContainer.removeAllViews()
     }
 
     override fun onResume() {
@@ -235,7 +243,7 @@ class EditAsset : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance().reference
 
         // Generate a unique key for the checklist item
-        val checklistItemId = database.child("categories").child(categoryId).child("checklists").push().key
+        val checklistItemId = database.child("asset_categories").child(categoryId).child("checklists").push().key
 
         if (checklistItemId != null) {
             val checklistData = mapOf(
@@ -243,7 +251,7 @@ class EditAsset : AppCompatActivity() {
                 "name" to checklistItem
             )
 
-            database.child("categories").child(categoryId).child("checklists").child(checklistItemId)
+            database.child("asset_categories").child(categoryId).child("checklists").child(checklistItemId)
                 .setValue(checklistData)
                 .addOnSuccessListener {
                     // Successfully added to the database
@@ -258,26 +266,41 @@ class EditAsset : AppCompatActivity() {
 
     private fun addCommentToUI(userName: String, timeInMillis: Long, commentText: String) {
         val commentsContainer: LinearLayout = findViewById(R.id.commentsContainer)
+        
+        // Ensure the container exists
+        if (commentsContainer == null) {
+            Toast.makeText(this, "Comment container not found", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        // Inflate the comment layout
-        val inflater = LayoutInflater.from(this)
-        val commentView = inflater.inflate(R.layout.comment_layout, commentsContainer, false)
+        try {
+            // Inflate the comment layout
+            val inflater = LayoutInflater.from(this)
+            val commentView = inflater.inflate(R.layout.comment_layout, commentsContainer, false)
 
-        // Set user data
-        val userNameView: TextView = commentView.findViewById(R.id.text_view_1)
-        val timeView: TextView = commentView.findViewById(R.id.time_text)
-        val commentContent: TextView = commentView.findViewById(R.id.comment_txt)
+            // Set user data
+            val userNameView: TextView = commentView.findViewById(R.id.text_view_1)
+            val timeView: TextView = commentView.findViewById(R.id.time_text)
+            val commentContent: TextView = commentView.findViewById(R.id.comment_txt)
 
-        userNameView.text = userName
-        timeView.text = DateUtils.getRelativeTimeSpanString(
-            timeInMillis,
-            System.currentTimeMillis(),
-            DateUtils.MINUTE_IN_MILLIS
-        )
-        commentContent.text = commentText
+            userNameView.text = userName
+            timeView.text = DateUtils.getRelativeTimeSpanString(
+                timeInMillis,
+                System.currentTimeMillis(),
+                DateUtils.MINUTE_IN_MILLIS
+            )
+            commentContent.text = commentText
 
-        // Add the comment view to the container
-        commentsContainer.addView(commentView)
+            // Add the comment view to the container
+            commentsContainer.addView(commentView, 0) // Add at the top for newest comments first
+            
+            // Scroll to show the new comment
+            scrollView.post {
+                scrollView.smoothScrollTo(0, commentView.top)
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error adding comment: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -286,7 +309,7 @@ class EditAsset : AppCompatActivity() {
         val database = FirebaseDatabase.getInstance().reference
 
         // Generate a unique key for the comment
-        val commentId = database.child("categories").child(categoryId).child("comments").push().key
+        val commentId = database.child("asset_categories").child(categoryId).child("comments").push().key
 
         if (commentId != null) {
             val commentData = mapOf(
@@ -296,7 +319,7 @@ class EditAsset : AppCompatActivity() {
                 "text" to commentText
             )
 
-            database.child("categories").child(categoryId).child("comments").child(commentId)
+            database.child("asset_categories").child(categoryId).child("comments").child(commentId)
                 .setValue(commentData)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Comment added successfully", Toast.LENGTH_SHORT).show()
@@ -309,8 +332,12 @@ class EditAsset : AppCompatActivity() {
 
     private fun fetchComments(categoryId: String) {
         val database = FirebaseDatabase.getInstance().reference
+        
+        // Clear previous comments to avoid duplicates
+        val commentsContainer = findViewById<LinearLayout>(R.id.commentsContainer)
+        commentsContainer.removeAllViews()
 
-        database.child("categories").child(categoryId).child("comments")
+        database.child("asset_categories").child(categoryId).child("comments")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -333,13 +360,20 @@ class EditAsset : AppCompatActivity() {
     private fun fetchAssetDetails(categoryId: String) {
         val database = FirebaseDatabase.getInstance().reference
 
-        database.child("categories").child(categoryId).addListenerForSingleValueEvent(object : ValueEventListener {
+        database.child("asset_categories").child(categoryId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val categoryName = snapshot.child("name").getValue(String::class.java)
+                    val totalValue = snapshot.child("totalValue").getValue(Double::class.java) ?: 0.0
+                    val assetCount = snapshot.child("assetCount").getValue(Long::class.java) ?: 0
+                    
                     if (!categoryName.isNullOrEmpty()) {
                         val titleEditText: EditText = findViewById(R.id.title)
-                        titleEditText.setText(categoryName) // Update the EditText with the category name
+                        titleEditText.setText("$categoryName ($assetCount assets, $${String.format("%.2f", totalValue)})") 
+                        
+                        // Update the subtitle to show more category information
+                        val subTitleEditText: EditText = findViewById(R.id.sub_title)
+                        subTitleEditText.setText("Asset Category: $categoryName\nTotal Value: $${String.format("%.2f", totalValue)}\nTotal Assets: $assetCount")
                     } else {
                         Toast.makeText(this@EditAsset, "Category name not found", Toast.LENGTH_SHORT).show()
                     }
@@ -357,7 +391,7 @@ class EditAsset : AppCompatActivity() {
     private fun fetchChecklistItems(categoryId: String) {
         val database = FirebaseDatabase.getInstance().reference
 
-        database.child("categories").child(categoryId).child("checklists")
+        database.child("asset_categories").child(categoryId).child("checklists")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {

@@ -40,9 +40,9 @@ class HomeActivity : AppCompatActivity() {
         // Fetch boards from Firebase
         fetchBoards()
 
-        // Set up logout button
-        val logoutBtn = findViewById<ImageView>(R.id.menu_icon)
-        logoutBtn.setOnTouchListener { _, motionEvent ->
+        // Set up user menu button
+        val menuBtn = findViewById<ImageView>(R.id.menu_icon)
+        menuBtn.setOnTouchListener { _, motionEvent ->
             if (motionEvent.action == MotionEvent.ACTION_DOWN) {
                 startActivity(Intent(this, ProfileActivity::class.java))
                 true
@@ -51,40 +51,34 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        // Asset inventory navigation button
         val moveToCategories = findViewById<ConstraintLayout>(R.id.add_Card)
-        moveToCategories.setOnTouchListener { _, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                startActivity(Intent(this, AssetInventoryActivity::class.java))
-                true
-            } else {
-                false
-            }
+        moveToCategories.setOnClickListener {
+            startActivity(Intent(this, AssetInventoryActivity::class.java))
         }
 
+        // Notification button
         val notificationMove = findViewById<ImageView>(R.id.notification_icon)
-        notificationMove.setOnTouchListener { _, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                startActivity(Intent(this, NotificationActivity::class.java))
-                true
-            } else {
-                false
-            }
+        notificationMove.setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
         }
 
-        // Inflate and set up modal for adding a card
+        // Inflate and set up modal for adding an asset
         val rootView = findViewById<ViewGroup>(android.R.id.content)
         modalView = LayoutInflater.from(this).inflate(R.layout.activity_add_card, rootView, false)
         modalView.visibility = View.GONE
         rootView.addView(modalView)
 
-        val addCardButton = findViewById<Button>(R.id.btn_add_Card)
-        addCardButton.setOnClickListener {
+        // Add Asset button
+        val addAssetButton = findViewById<Button>(R.id.btn_add_Card)
+        addAssetButton.text = "Add New Asset"
+        addAssetButton.setOnClickListener {
             setupAssetModal()
             modalView.visibility = View.VISIBLE
         }
 
-        val closeCardModalButton = modalView.findViewById<ImageView>(R.id.topCloseButton)
-        closeCardModalButton.setOnClickListener {
+        val closeAssetModalButton = modalView.findViewById<ImageView>(R.id.topCloseButton)
+        closeAssetModalButton.setOnClickListener {
             modalView.visibility = View.GONE
         }
         
@@ -113,6 +107,9 @@ class HomeActivity : AppCompatActivity() {
                     }
                     
                     modalView.visibility = View.GONE
+                    
+                    // Show success message 
+                    Toast.makeText(this, "Asset added successfully", Toast.LENGTH_SHORT).show()
                     
                     // Clear the fields
                     modalView.findViewById<EditText>(R.id.inputField).text.clear()
