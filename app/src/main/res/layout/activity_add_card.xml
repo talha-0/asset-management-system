@@ -1,0 +1,133 @@
+<!-- res/layout/modal_layout.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#80000000">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray"
+        android:padding="16dp">
+
+        <!-- Close Button at Top-Right Corner -->
+        <ImageView
+            android:id="@+id/topCloseButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/close"
+            android:contentDescription="Close"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/modalTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topCloseButton"
+            android:layout_marginTop="8dp"
+            android:text="Add New Asset"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Asset Name Field -->
+        <EditText
+            android:id="@+id/inputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/modalTitle"
+            android:layout_marginTop="16dp"
+            android:hint="Asset name *"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Asset Value Field -->
+        <EditText
+            android:id="@+id/valueField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inputField"
+            android:layout_marginTop="8dp"
+            android:hint="Asset value ($) *"
+            android:inputType="numberDecimal"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Serial Number Field -->
+        <EditText
+            android:id="@+id/serialNumberField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/valueField"
+            android:layout_marginTop="8dp"
+            android:hint="Serial Number"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Manufacturer Field -->
+        <EditText
+            android:id="@+id/manufacturerField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/serialNumberField"
+            android:layout_marginTop="8dp"
+            android:hint="Manufacturer"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Asset Location Field -->
+        <EditText
+            android:id="@+id/locationField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/manufacturerField"
+            android:layout_marginTop="8dp"
+            android:hint="Location"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Asset Status Field -->
+        <EditText
+            android:id="@+id/statusField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/locationField"
+            android:layout_marginTop="8dp"
+            android:hint="Status (In Use, In Storage, etc.)"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <!-- Required Fields Note -->
+        <TextView
+            android:id="@+id/requiredNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusField"
+            android:layout_marginTop="8dp"
+            android:text="* Required fields"
+            android:textColor="@color/light_gray"
+            android:textSize="12sp" />
+
+        <!-- Send Button -->
+        <ImageView
+            android:id="@+id/sendButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/requiredNote"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/send"
+            android:contentDescription="Save Asset" />
+    </RelativeLayout>
+</LinearLayout>

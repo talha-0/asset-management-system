@@ -1,0 +1,80 @@
+<!-- res/layout/modal_layout.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:background="#80000000">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray"
+        android:padding="16dp">
+
+        <!-- Heading at the Top -->
+        <TextView
+            android:id="@+id/topHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Card members"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- LinearLayout positioned below the heading -->
+        <LinearLayout
+            android:id="@+id/not1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topHeading"
+            android:layout_marginTop="10dp"
+            android:paddingVertical="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/text_view_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ehsen Nawaz"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/time_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ehsenawaz@gmail.com"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Done Button positioned below not1 in the bottom-right corner -->
+        <TextView
+            android:id="@+id/done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/not1"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:text="DONE"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="@android:color/transparent" />
+
+    </RelativeLayout>
+</LinearLayout>

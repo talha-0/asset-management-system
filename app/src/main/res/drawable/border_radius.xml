@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/text_view_border.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Set the border color and width -->
+    <solid android:color="#111461" />
+
+
+    <!-- Set the border radius -->
+    <corners android:radius="20dp" /> <!-- Adjust radius as needed -->
+</shape>

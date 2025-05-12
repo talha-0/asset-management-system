@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@color/black">
+
+    <!-- Header Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/dark_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_boards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:text="Labels"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/close"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/notification_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="40dp"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintRight_toRightOf="@id/option_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/option_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="228dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/add"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Linear Layout 1 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/header"> <!-- Add this constraint -->
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Copy Request"
+            android:background="@color/primary"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            />
+
+        <ImageView
+            android:id="@+id/edit_icon_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 2 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="One More Step"
+            android:background="@color/dark_gray"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+             />
+
+        <ImageView
+            android:id="@+id/edit_icon_2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 3 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Priority"
+            android:background="@color/secondary"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp" />
+
+        <ImageView
+            android:id="@+id/edit_icon_3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 4 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Design Team"
+            android:background="@color/purple_500"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+             />
+
+        <ImageView
+            android:id="@+id/edit_icon_4"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 5 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_4">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Product Marketing"
+            android:background="@color/teal_200"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            />
+
+        <ImageView
+            android:id="@+id/edit_icon_5"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 6 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Trello Tip"
+            android:background="@color/red"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+            />
+
+        <ImageView
+            android:id="@+id/edit_icon_6"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Linear Layout 7 -->
+    <LinearLayout
+        android:id="@+id/linear_layout_7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_6">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Help"
+            android:background="@color/green"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:layout_marginEnd="4dp"
+             />
+
+        <ImageView
+            android:id="@+id/edit_icon_7"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit_icon"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,66 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#80000000">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray"
+        android:padding="16dp">
+
+        <!-- Close Button at Top-Right Corner -->
+        <ImageView
+            android:id="@+id/topCloseButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/close"
+            android:contentDescription="Close"
+            android:background="?attr/selectableItemBackgroundBorderless" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/modalTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topCloseButton"
+            android:layout_marginTop="8dp"
+            android:text="Add Asset Category"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Horizontal Container for EditText and Action Button -->
+        <LinearLayout
+            android:id="@+id/nameInputContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@id/modalTitle"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/boardNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Category name"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+            <ImageView
+                android:id="@+id/sendButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/send"
+                android:contentDescription="Send" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

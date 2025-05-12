@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">trello-clone</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile_list">ProfileListActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_board_menu">BoardMenu</string>
+    <string name="title_activity_edit_board">EditBoard</string>
+    <string name="title_activity_labels">Labels</string>
+    <string name="title_activity_notification">NotificationActivity</string>
+    <string-array name="board_dropdown_options">
+        <item>Project Management By Ahsan</item>
+        <item>Blocking Criteria</item>
+        <item>WorkSpace Of UI Completion</item>
+    </string-array>
+
+    <string-array name="list_dropdown_options">
+        <item>Project Resources</item>
+        <item>Questions For Next Meeting</item>
+        <item>To Do</item>
+        <item>Pending</item>
+        <item>Blocked</item>
+        <item>Done (current)</item>
+    </string-array>
+</resources>
