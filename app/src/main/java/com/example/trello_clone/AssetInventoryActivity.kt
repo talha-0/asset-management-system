@@ -76,8 +76,17 @@ class AssetInventoryActivity : AppCompatActivity() {
         }
         categoriesRecyclerView.adapter = assetCategoryAdapter
 
-        // Fetch asset categories data
-        fetchAssetCategories()
+        // Check if we received data from HomeActivity
+        val boardId = intent.getStringExtra("BOARD_ID")
+        val boardName = intent.getStringExtra("BOARD_NAME")
+
+        // If we have a specific board ID, just load that category
+        if (!boardId.isNullOrEmpty()) {
+            fetchSpecificCategory(boardId)
+        } else {
+            // Otherwise fetch all categories
+            fetchAssetCategories()
+        }
 
         // Check if we should show the move dialog
         if (intent.getBooleanExtra("SHOW_MOVE_DIALOG", false)) {
@@ -948,6 +957,101 @@ class AssetInventoryActivity : AppCompatActivity() {
                 Toast.makeText(this@AssetInventoryActivity, "Error filtering assets: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun fetchSpecificCategory(categoryId: String) {
+        database.child("asset_categories").child(categoryId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    assetCategoriesList.clear()
+                    
+                    if (snapshot.exists()) {
+                        val categoryName = snapshot.child("name").getValue(String::class.java) ?: ""
+                        val categoryImage = snapshot.child("image").getValue(String::class.java) ?: ""
+                        val assetCount = snapshot.child("assetCount").getValue(Long::class.java) ?: 0
+                        val totalValue = snapshot.child("totalValue").getValue(Double::class.java) ?: 0.0
+                        val assets = mutableListOf<AssetItem>()
+                        
+                        var assetsInUse = 0
+                        var assetsInStorage = 0
+                        var assetsInMaintenance = 0
+                        var assetsRetired = 0
+
+                        // Fetch assets for this category
+                        val assetsSnapshot = snapshot.child("assets")
+                        if (assetsSnapshot.exists()) {
+                            for (asset in assetsSnapshot.children) {
+                                val assetId = asset.key ?: ""
+                                val assetName = asset.child("name").getValue(String::class.java) ?: ""
+                                val assetValueObj = asset.child("value").getValue()
+                                // Safely handle different possible value types
+                                val assetValue = when (assetValueObj) {
+                                    is Double -> assetValueObj
+                                    is Long -> assetValueObj.toDouble()
+                                    is Int -> assetValueObj.toDouble()
+                                    is String -> assetValueObj.toDoubleOrNull() ?: 0.0
+                                    else -> 0.0
+                                }
+                                val assetLocation = asset.child("location").getValue(String::class.java) ?: ""
+                                val assetStatus = asset.child("status").getValue(String::class.java) ?: "Unknown"
+                                val purchaseDate = asset.child("purchaseDate").getValue(Long::class.java) ?: 0L
+                                val assignedTo = asset.child("assignedTo").getValue(String::class.java) ?: ""
+                                val maintenanceStatus = asset.child("maintenanceStatus").getValue(String::class.java) ?: "No maintenance scheduled"
+                                val lastServiceDate = asset.child("lastServiceDate").getValue(Long::class.java) ?: 0L
+                                val nextServiceDate = asset.child("nextServiceDate").getValue(Long::class.java) ?: 0L
+                                val serialNumber = asset.child("serialNumber").getValue(String::class.java) ?: ""
+                                val manufacturer = asset.child("manufacturer").getValue(String::class.java) ?: ""
+                                
+                                // Update asset status counts based on case-insensitive status text
+                                when {
+                                    assetStatus.contains("In Use", ignoreCase = true) -> assetsInUse++
+                                    assetStatus.contains("Storage", ignoreCase = true) -> assetsInStorage++
+                                    assetStatus.contains("Maintenance", ignoreCase = true) -> assetsInMaintenance++
+                                    assetStatus.contains("Retired", ignoreCase = true) || 
+                                    assetStatus.contains("Disposed", ignoreCase = true) -> assetsRetired++
+                                }
+                                
+                                assets.add(AssetItem(
+                                    assetId, 
+                                    assetName, 
+                                    assetValue, 
+                                    assetLocation, 
+                                    assetStatus, 
+                                    purchaseDate, 
+                                    assignedTo,
+                                    maintenanceStatus,
+                                    lastServiceDate,
+                                    nextServiceDate,
+                                    serialNumber,
+                                    manufacturer
+                                ))
+                            }
+                        }
+
+                        assetCategoriesList.add(AssetCategoryItem(
+                            categoryId, 
+                            categoryName, 
+                            categoryImage, 
+                            assetCount, 
+                            totalValue, 
+                            assets
+                        ))
+                        
+                        // Update summary section with just this category's data
+                        updateAssetSummary(assetCount, totalValue)
+                        updateAssetLifecycleView(assetsInUse, assetsInStorage, assetsInMaintenance, assetsRetired)
+                    } else {
+                        Toast.makeText(this@AssetInventoryActivity, "Category not found", Toast.LENGTH_SHORT).show()
+                        finish() // Return to previous activity
+                    }
+                    
+                    assetCategoryAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@AssetInventoryActivity, "Error loading category: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }
 

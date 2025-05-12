@@ -120,6 +120,18 @@ class AssetCategoryItemAdapter(
             }
             holder.assignedToView.text = maintenanceText
             
+            // Only show assets in RecyclerView if we have them
+            if (category.assets.size > 1) {
+                holder.assetsRecyclerView.visibility = View.VISIBLE
+                
+                // Only display the remaining assets (skip the first one already shown in the summary)
+                val remainingAssets = category.assets.drop(1)
+                val assetsAdapter = ImprovedAssetAdapter(remainingAssets)
+                holder.assetsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+                holder.assetsRecyclerView.adapter = assetsAdapter
+            } else {
+                holder.assetsRecyclerView.visibility = View.GONE
+            }
         } else {
             // No assets, show default values
             holder.assetIdView.text = "Category ID: ${category.categoryId.takeLast(6)}"
@@ -128,6 +140,7 @@ class AssetCategoryItemAdapter(
             holder.statusView.text = "Status: No assets"
             holder.purchaseDateView.text = "Purchase Date: N/A"
             holder.assignedToView.text = "No assets in this category"
+            holder.assetsRecyclerView.visibility = View.GONE
         }
 
         // Navigate to EditAsset on card click with proper CATEGORY_ID
@@ -143,11 +156,6 @@ class AssetCategoryItemAdapter(
         holder.addAssetButton.setOnClickListener {
             onAddAssetClicked(category)
         }
-
-        // Setup the nested RecyclerView for assets with improved adapter
-        val assetsAdapter = ImprovedAssetAdapter(category.assets)
-        holder.assetsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-        holder.assetsRecyclerView.adapter = assetsAdapter
     }
 
     override fun getItemCount() = categories.size

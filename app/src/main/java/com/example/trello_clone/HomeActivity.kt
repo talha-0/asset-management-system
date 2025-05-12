@@ -212,10 +212,14 @@ class HomeActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 boardsList.clear()
                 for (boardSnapshot in snapshot.children) {
-                    val boardId = boardSnapshot.child("id").value.toString()
-                    val boardName = boardSnapshot.child("name").value.toString()
-                    val boardImage = boardSnapshot.child("image").value?.toString()
-                    boardsList.add(Board(boardId, boardName, boardImage))
+                    val boardId = boardSnapshot.child("id").getValue(String::class.java) ?: continue
+                    val boardName = boardSnapshot.child("name").getValue(String::class.java) ?: continue
+                    val boardImage = boardSnapshot.child("image").getValue(String::class.java)
+                    
+                    // Check if the board is valid before adding it
+                    if (boardId.isNotEmpty() && boardName.isNotEmpty()) {
+                        boardsList.add(Board(boardId, boardName, boardImage))
+                    }
                 }
                 boardAdapter.notifyDataSetChanged()
             }
@@ -411,6 +415,7 @@ class BoardAdapter(private val boards: List<Board>) : RecyclerView.Adapter<Board
         val boardId: TextView = itemView.findViewById(R.id.project_id)
         val boardName: TextView = itemView.findViewById(R.id.project_heading)
         val boardImage: ImageView = itemView.findViewById(R.id.default_icon)
+        val assetValueText: TextView = itemView.findViewById(R.id.asset_value)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
@@ -420,10 +425,22 @@ class BoardAdapter(private val boards: List<Board>) : RecyclerView.Adapter<Board
 
     override fun onBindViewHolder(holder: BoardViewHolder, position: Int) {
         val board = boards[position]
-        holder.boardId.text = board.id // Bind the board ID
-        holder.boardImage.setImageResource(R.drawable.default_board) // Default image
+        
+        // Setup the board card with data
+        holder.boardId.text = "Category ID: ${board.id.takeLast(6)}"
         holder.boardName.text = board.name
-        holder.boardImage.setImageResource(R.drawable.default_board) // Default image
+        holder.boardImage.setImageResource(R.drawable.default_board)
+        holder.assetValueText.text = "View/edit asset category"
+        
+        // Add click listener to navigate to Asset Inventory
+        holder.itemView.setOnClickListener {
+            val context = holder.itemView.context
+            val intent = Intent(context, AssetInventoryActivity::class.java)
+            // Pass any necessary data to AssetInventoryActivity
+            intent.putExtra("BOARD_ID", board.id)
+            intent.putExtra("BOARD_NAME", board.name)
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = boards.size
